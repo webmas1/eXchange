@@ -83,8 +83,12 @@ curl_setopt_array($handle, [
 if(curl_exec($handle)){
     $coins = curl_exec($handle); // results from API
     $coins = json_decode($coins); // string to an object
-    $coins = get_object_vars($coins); // gets the properties of the given object
-    $coins = get_object_vars($coins['rates']); // gets the properties of the given object
+    if($coins->success) {
+        $coins = get_object_vars($coins); // gets the properties of the given object
+        $coins = get_object_vars($coins['rates']); // gets the properties of the given object
+    } else {
+        echo "Service is down, please try again later...";die;
+    }
 } else {
     echo "Something wen't wrong, please try again later...";die;
 };    
