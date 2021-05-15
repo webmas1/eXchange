@@ -28,7 +28,7 @@ if (isset($_GET["changeValue"])) {
 
                 // API call with CURL
                 $handle = curl_init();
-                $url = "https://api.exchangeratesapi.io/latest?base=$changeFrom&symbols=$changeTo";
+                $url = "https://api.ratesapi.io/api/latest?base=$changeFrom&symbols=$changeTo";
             
                 curl_setopt_array($handle, [
                     CURLOPT_URL => $url,
@@ -38,8 +38,7 @@ if (isset($_GET["changeValue"])) {
                 if(curl_exec($handle)){
                     $currencies = curl_exec($handle); // results from API
                     $currencies = json_decode($currencies); // string to an object
-                    $currencies = get_object_vars($currencies); // gets the properties of the given object
-                    $currencies = get_object_vars($currencies['rates']); // gets the properties of the given object
+                    $currencies = get_object_vars($currencies->rates); // gets the properties of the given object
             
                     foreach ($currencies as $coin => $currency) { // break object into separated coins and currencies
             
@@ -73,7 +72,7 @@ if (isset($_GET["changeValue"])) {
 
 // Getting coins list from API
 $handle = curl_init();
-$url = "https://api.exchangeratesapi.io/latest";
+$url = "https://api.ratesapi.io/api/latest";
 
 curl_setopt_array($handle, [
     CURLOPT_URL => $url,
@@ -83,9 +82,9 @@ curl_setopt_array($handle, [
 if(curl_exec($handle)){
     $coins = curl_exec($handle); // results from API
     $coins = json_decode($coins); // string to an object
-    if($coins->success) {
-        $coins = get_object_vars($coins); // gets the properties of the given object
-        $coins = get_object_vars($coins['rates']); // gets the properties of the given object
+
+    if(isset($coins->rates)) {
+        $coins = get_object_vars($coins->rates); // gets the properties of the given object
     } else {
         echo "Service is down, please try again later...";die;
     }
